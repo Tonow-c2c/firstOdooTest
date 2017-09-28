@@ -59,7 +59,7 @@ class LibraryBook(models.Model):
                                    # optional: currency_field='currency_id',
                                    currency_field='currency_id',
                                   )
-    publisher_id = fields.Many2one('res.partner', string='Publisher',
+    publisher_id = fields.Many2one(comodel_name='res.partner', string='Publisher',
                                    # optional:
                                    ondelete='set null',
                                    context={},
@@ -85,5 +85,6 @@ class ResPartner(models.Model):
     Docstring
     '''
     _inherit = 'res.partner'
-    book_ids = fields.One2many('library.book', 'publisher_id',
+    book_ids = fields.One2many(comodel_name='library.book',
+                               inverse_name='publisher_id',
                                string='Published Books')
