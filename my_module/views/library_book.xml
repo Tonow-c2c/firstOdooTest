@@ -12,4 +12,65 @@
             parent=""
             sequence="5" />
     </data>
+    <record id="library_book_view_form" model="ir.ui.view">
+        <field name="name">Library Book Form</field>
+        <field name="model">library.book</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="name"/>
+                    <field name="short_name"/>
+                    <field name="author_ids" widget="many2many_tags"/>
+                    <field name="state"/>
+                    <field name="description"/>
+                    <field name="cover"/>
+                    <field name="out_of_print"/>
+                    <field name="date_updated"/>
+                    <field name="pages"/>
+                    <field name="reader_rating"/>
+                    <field name="cost_price"/>
+                    <field name="retail_price"/>
+                    <field name="publisher_id"/>
+                </group>
+                <group>
+                    <field name="date_release"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="library_book_view_tree" model="ir.ui.view">
+        <field name="name">Library Book List</field>
+        <field name="model">library.book</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="date_release"/>
+                <field name="short_name"/>
+                <field name="author_ids" widget="many2many_tags"/>
+                <field name="state"/>
+                <field name="description"/>
+                <field name="cover"/>
+                <field name="out_of_print"/>
+                <field name="date_release"/>
+                <field name="date_updated"/>
+                <field name="pages"/>
+                <field name="reader_rating"/>
+                <field name="cost_price"/>
+                <field name="retail_price"/>
+                <field name="publisher_id"/>
+            </tree>
+        </field>
+    </record>
+    <record id="library_book_view_search" model="ir.ui.view">
+        <field name="name">Library Book Search</field>
+        <field name="model">library.book</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="author_ids"/>
+                <filter string="No Authors"
+                    domain="[('author_ids','=',False)]"/>
+            </search>
+        </field>
+    </record>
 </openerp>
