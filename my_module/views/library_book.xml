@@ -33,6 +33,7 @@
                     <field name="retail_price"/>
                     <field name="publisher_id"/>
                     <field name="age_days"/>
+                    <field name="publisher_city"/>
                 </group>
                 <group>
                     <field name="date_release"/>
@@ -62,6 +63,7 @@
                 <field name="retail_price"/>
                 <field name="publisher_id"/>
                 <field name="age_days"/>
+                <field name="publisher_city"/>
             </tree>
         </field>
     </record>
