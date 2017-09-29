@@ -2,7 +2,7 @@
 '''
 docsting models
 '''
-from openerp import models, fields
+from openerp import models, fields, api
 from openerp.addons import decimal_precision as dp
 class LibraryBook(models.Model):
     '''
@@ -20,6 +20,8 @@ class LibraryBook(models.Model):
     date_release = fields.Date('Release Date')
     author_ids = fields.Many2many('res.partner',
                                   string='Authors')
+    category_ids = fields.Many2many('library.book.category',
+                                    string='Categorie')
     notes = fields.Text('Internal Notes')
     state = fields.Selection(
         [('draft', 'Not Available'),
@@ -65,6 +67,17 @@ class LibraryBook(models.Model):
                                    context={},
                                    domain=[],
                                   )
+    _sql_constraints = [('name_uniq',
+                         'UNIQUE (name)',
+                         'Book title must be unique.')
+                       ]
+
+    @api.constrains('date_release')
+    def _check_release_date(self):
+        for r in self:
+            if r.date_release > fields.Date.today():
+                raise models.ValidationError(
+                    'Release date must be in the past')
 
 
     def name_get(self):
