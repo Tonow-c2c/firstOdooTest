@@ -80,6 +80,12 @@ class LibraryBook(models.Model):
                             store=False,
                             compute_sudo=False,
                            )
+    ref_doc_id = fields.Reference(selection='_referencable_models',
+                                  string='Reference Document'
+                                 )
+
+
+
     _sql_constraints = [('name_uniq',
                          'UNIQUE (name)',
                          'Book title must be unique.')
@@ -98,6 +104,11 @@ class LibraryBook(models.Model):
         for book in self.filtered('date_release'):
             delta = fDate.from_string(book.date_release) - today
             book.age_days = delta.days
+
+    @api.model
+    def _referencable_models(self):
+        models = self.env['res.request.link'].search([])
+        return [(x.object, x.name) for x in models]
 
 
     def name_get(self):
