@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <act_window
+            id="library_member_action"
+            name="Library Member"
+            res_model="library.member" />
+        <menuitem
+            id="library_member_menu"
+            name="Library Member"
+            action="library_member_action"
+            parent=""
+            sequence="5" />
+    </data>
+    <record id="library_member_view_form" model="ir.ui.view">
+        <field name="name">Library Member Form</field>
+        <field name="model">library.member</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="name"/>
+                    <field name="phone"/>
+                    <field name="date_start"/>
+                    <field name="date_end"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="library_member_view_tree" model="ir.ui.view">
+        <field name="name">Library Member List</field>
+        <field name="model">library.member</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="phone"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <!-- <field name="partner_id" widget="many2many_tags"/> -->
+            </tree>
+        </field>
+    </record>
+    <record id="library_member_view_search" model="ir.ui.view">
+        <field name="name">Library Member Search</field>
+        <field name="model">library.member</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <!-- <field name="partner_id" widget="many2many_tags"/> -->
+            </search>
+        </field>
+    </record>
+</openerp>

@@ -7,11 +7,42 @@ from openerp.addons import decimal_precision as dp
 from openerp.fields import Date as fDate
 from datetime import timedelta as td
 
+
+class BaseArchive(models.AbstractModel):
+    '''
+    Docstring class TODO
+    '''
+    _name = 'base.archive'
+    active = fields.Boolean(default=True)
+
+    def do_archive(self):
+        '''
+        Docstring TODO
+        '''
+        for record in self:
+            record.active = not record.active
+
+
+class LibraryMember(models.Model):
+    '''
+    Docstring class TODO
+    '''
+    _name = 'library.member'
+    _inherits = {'res.partner': 'partner_id'}
+    partner_id = fields.Many2one('res.partner',
+                                 ondelete='cascade'
+                                )
+    date_start = fields.Date('Member Since')
+    date_end = fields.Date('Termination Date')
+    member_number = fields.Char()
+
+
 class LibraryBook(models.Model):
     '''
     Docstring class
     '''
     _name = 'library.book'
+    _inherit = ['base.archive']
     _description = 'Library Book'
     _order = 'date_release desc, name'
     _rec_name = 'short_name'
@@ -69,7 +100,8 @@ class LibraryBook(models.Model):
                                    # optional: currency_field='currency_id',
                                    currency_field='currency_id',
                                   )
-    publisher_id = fields.Many2one(comodel_name='res.partner', string='Publisher',
+    publisher_id = fields.Many2one(comodel_name='res.partner',
+                                   string='Publisher',
                                    # optional:
                                    ondelete='set null',
                                    context={},
@@ -131,6 +163,7 @@ class LibraryBook(models.Model):
         value_days = td(days=value)
         value_date = fDate.to_string(today - value_days)
         return [('date_release', operator, value_date)]
+
 
 class ResPartner(models.Model):
     '''
