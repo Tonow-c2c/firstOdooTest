@@ -36,6 +36,8 @@
                     <field name="publisher_city"/>
                     <field name="ref_doc_id"/>
                     <field name="active"/>
+                    <button type="object" name="change_to_available"
+                                          string="Confirme Available" />
                 </group>
                 <group>
                     <field name="date_release"/>
