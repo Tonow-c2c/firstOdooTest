@@ -15,6 +15,11 @@ class LibraryBook(models.Model):
     _description = 'Library Book'
     _order = 'date_release desc, name'
     _rec_name = 'short_name'
+    _sql_constraints = [('name_uniq',
+                         'UNIQUE (name)',
+                         'Book title must be unique.')
+                       ]
+
     name = fields.Char('Title', required=True)
     short_name = fields.Char(string='Short Title',
                              size=100, # For Char only
@@ -84,13 +89,6 @@ class LibraryBook(models.Model):
                                   string='Reference Document'
                                  )
 
-
-
-    _sql_constraints = [('name_uniq',
-                         'UNIQUE (name)',
-                         'Book title must be unique.')
-                       ]
-
     @api.constrains('date_release')
     def _check_release_date(self):
         for r in self:
@@ -98,18 +96,17 @@ class LibraryBook(models.Model):
                 raise models.ValidationError(
                     'Release date must be in the past')
 
+    @api.model
+    def _referencable_models(self):
+        models = self.env['res.request.link'].search([])
+        return [(x.object, x.name) for x in models]
+
     @api.depends('date_release')
     def _compute_age(self):
         today = fDate.from_string(fDate.today())
         for book in self.filtered('date_release'):
             delta = fDate.from_string(book.date_release) - today
             book.age_days = delta.days
-
-    @api.model
-    def _referencable_models(self):
-        models = self.env['res.request.link'].search([])
-        return [(x.object, x.name) for x in models]
-
 
     def name_get(self):
         '''
@@ -140,6 +137,23 @@ class ResPartner(models.Model):
     Docstring
     '''
     _inherit = 'res.partner'
+    _order = 'name'
     book_ids = fields.One2many(comodel_name='library.book',
                                inverse_name='publisher_id',
                                string='Published Books')
+
+
+    authored_book_ids = fields.Many2many('library.book',
+                                         # column1='',
+                                         # column2='',
+                                         # relation='',
+                                         string='Authored Books'
+                                        )
+    count_books = fields.Integer('Number of Authored Books',
+                                 compute='_compute_count_books'
+                                )
+
+    @api.depends('authored_book_ids')
+    def _compute_count_books(self):
+        for r in self:
+            r.count_books = len(r.authored_book_ids)
