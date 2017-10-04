@@ -165,6 +165,11 @@ class LibraryBook(models.Model):
             delta = fDate.from_string(book.date_release) - today
             book.age_days = delta.days
 
+    @api.model
+    def get_all_library_members(self):
+        library_member_model = self.env['library.member']
+        return library_member_model.search([])
+
     def name_get(self):
         '''
         Docstring
