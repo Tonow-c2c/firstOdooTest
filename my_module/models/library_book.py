@@ -51,7 +51,8 @@ class LibraryBook(models.Model):
                          'Book title must be unique.')
                        ]
 
-    name = fields.Char('Title', required=True)
+    name = fields.Char('TitleTest', required=True)
+    usbn = fields.Char('ISBN')
     short_name = fields.Char(string='Short Title',
                              size=100, # For Char only
                              translate=False, # also for Text fields
@@ -170,16 +171,33 @@ class LibraryBook(models.Model):
         library_member_model = self.env['library.member']
         return library_member_model.search([])
 
+    @api.model
+    def _name_search(self, name='', args=None, operator='ilike',
+                     limit=100, name_get_uid=None):
+        args = [] if args is None else args.copy()
+        if not (name == '' and operator == 'ilike'):
+            args += ['|', '|',
+                     ('name', operator, name),
+                     ('isbn', operator, name),
+                     ('author_ids.name', operator, name)
+                    ]
+        return super(LibraryBook, self)._name_search(name='',
+                                                     args=args,
+                                                     operator='ilike',
+                                                     limit=limit,
+                                                     name_get_uid=name_get_uid
+                                                    )
+
     def name_get(self):
         '''
         Docstring
         '''
         result = []
-        for record in self:
-            result.append(
-                (record.id,
-                 u"%s (%s)" % (record.name, record.date_release)
-                ))
+        for book in self:
+            authors = book.author_ids.mapped('name')
+            name = u'%s (%s)' % (book.title,
+                                 u', '.join(authors))
+            result.append((book.id, name))
         return result
 
     def _inverse_age(self):
