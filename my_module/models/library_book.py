@@ -195,7 +195,7 @@ class LibraryBook(models.Model):
         result = []
         for book in self:
             authors = book.author_ids.mapped('name')
-            name = u'%s (%s)' % (book.title,
+            name = u'%s (%s)' % (book.name,
                                  u', '.join(authors))
             result.append((book.id, name))
         return result
@@ -238,3 +238,56 @@ class ResPartner(models.Model):
     def _compute_count_books(self):
         for r in self:
             r.count_books = len(r.authored_book_ids)
+
+
+class LibraryBookLoan(models.Model):
+    '''
+    Docstring Class TODO
+    '''
+    _name = 'library.book.loan'
+    book_id = fields.Many2one('library.book',
+                              'Book',
+                              required=True
+                             )
+    member_id = fields.Many2one('library.member',
+                                'Borrower',
+                                required=True
+                               )
+    state = fields.Selection([('ongoing', 'Ongoing'),
+                              ('done', 'Done')],
+                             'State',
+                             default='ongoing',
+                             required=True
+                            )
+
+
+class LibraryLoanWizard(models.TransientModel):
+    '''
+    Docstring class TODO
+    '''
+    _name = 'library.loan.wizard'
+    member_id = fields.Many2one(comodel_name='library.member',
+                                string='Member',
+                               )
+    book_ids = fields.Many2many(comodel_name='library.book',
+                                string='Books',
+                               )
+
+    @api.multi
+    def record_loans(self):
+        for wizard in self:
+            member = wizard.member_id
+            books = wizard.book_ids
+            loan = self.env['library.book.loan']
+            for book in wizard.book_ids:
+                loan.create({'member_id': member.id,
+                             'book_id': book.id})
+
+    @api.multi
+    def record_borrows(self):
+        self.ensure_one()
+        member = self.member_id
+        books = self.book_ids
+        loan = self.env['library.book.loan']
+        loan.create({'member_id': member.id,
+                     'book_id': books.id})

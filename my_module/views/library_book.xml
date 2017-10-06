@@ -11,6 +11,19 @@
             action="library_book_action"
             parent=""
             sequence="5" />
+        <act_window
+            id="action_wizard_loan_books"
+            name="Record Loans"
+            res_model="library.loan.wizard"
+            view_mode="form"
+            target="new"
+            />
+        <menuitem
+            id="menu_wizard_loan_books"
+            parent="library_book_menu"
+            action="action_wizard_loan_books"
+            sequence="20"
+            />
     </data>
     <record id="library_book_view_form" model="ir.ui.view">
         <field name="name">Library Book Form</field>
@@ -36,8 +49,9 @@
                     <field name="publisher_city"/>
                     <field name="ref_doc_id"/>
                     <field name="active"/>
-                    <button type="object" name="change_to_available"
-                                          string="Confirme Available" />
+                    <button type="object"
+                            name="change_to_available"
+                            string="Confirme Available" />
                 </group>
                 <group>
                     <field name="date_release"/>
@@ -83,6 +97,32 @@
                 <filter string="No Authors"
                     domain="[('author_ids','=',False)]"/>
             </search>
+        </field>
+    </record>
+    <record id='library_loan_wizard_form' model='ir.ui.view'>
+        <field name='name'>library loan wizard form view</field>
+        <field name='model'>library.loan.wizard</field>
+        <field name='arch' type='xml'>
+            <form string="Borrow books">
+                <sheet>
+                    <group>
+                        <field name='member_id'/>
+                    </group>
+                    <group>
+                        <field name='book_ids'/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name='record_borrows'
+                            string='OK'
+                            class='btn-primary'
+                            type='object'/>
+                    or
+                    <button string='Cancel'
+                            class='btn-default'
+                            special='cancel'/>
+                </footer>
+            </form>
         </field>
     </record>
 </openerp>
