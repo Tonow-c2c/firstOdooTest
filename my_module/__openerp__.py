@@ -2,11 +2,12 @@
 {
     'name': "Library Books",
     'summary': "Manage your books",
-    'depends': ['base' , 'decimal_precision'],
+    'depends': ['base', 'decimal_precision'],
     'data': [
         'views/library_book.xml',
         'views/library_member.xml',
     ],
+    'test': ['test/test_books.yml']
 }
 
 
