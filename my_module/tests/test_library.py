@@ -23,5 +23,5 @@ class LibraryTestCase(TransactionCase):
         self.assertEqual(
             self.book.state,
             'available',
-            'the state cannot change from available to %s' % \
+            'the state cannot change from available to %s' %
             self.book.state)

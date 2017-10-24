@@ -6,8 +6,9 @@
     'data': [
         'views/library_book.xml',
         'views/library_member.xml',
+        'views/test_backend_views.xml',
     ],
-    'test': ['test/test_books.yml']
+    'test': ['tests/test_books.yml'],
 }
 
 

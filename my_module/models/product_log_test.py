@@ -1,6 +1,7 @@
 from os.path import join
 from openerp import models, api, exceptions
 import logging
+_logger = logging.getLogger(__name__)
 
 EXPORTS_DIR = '/srv/exports'
 
@@ -21,8 +22,8 @@ class ProductProduct(models.Model):
                 for prod in products:
                     fobj.write('%s\t%f\n' % (prod.name,
                     prod.qty_available))
-                except IOError:
-                    _logger.exception(
-                            'Error while writing to %s in %s',
-                            'stock_level.txt', EXPORTS_DIR)
-                    raise exceptions.UserError('unable to save file')
+        except IOError:
+            _logger.exception(
+                    'Error while writing to %s in %s',
+                    'stock_level.txt', EXPORTS_DIR)
+            raise exceptions.UserError('unable to save file')
